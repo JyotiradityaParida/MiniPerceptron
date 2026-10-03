@@ -1,18 +1,10 @@
 #include <iostream>
 #include <cstdlib>
-#include <stdexcept>
 #include "Activation.h"
 #include "Dataset.h"
 #include "Perceptron.h"
 #include "PerceptronTrainer.h"
 using namespace std;
-
-class InvalidChoiceException : public exception {
-public:
-    const char* what() const noexcept override {
-        return "Invalid choice! Please enter 1 or 2.";
-    }
-};
 
 void displayPredictions(Perceptron& perceptron, const Dataset& data) {
     for (int i=0;i<data.getInputs().size();i++) {
@@ -23,12 +15,26 @@ void displayPredictions(Perceptron& perceptron, const Dataset& data) {
     }
 }
 
-void waitForContinue() {
+char getTrainingChoice() {
     char choice;
-    cout << endl;
-    cout << "Press n to continue: ";
-    cin >> choice;
-    cout << endl;
+
+    while (true) {
+        cout << endl;
+        cout << "Enter n to show next epoch" << endl;
+        cout << "Enter a to show all epochs till convergence" << endl;
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        try {
+            if (choice != 'a' && choice != 'n')
+                throw "Invalid choice! Please enter a or n.";
+
+            return choice;
+        }
+        catch (const char* message) {
+            cout << message << endl;
+        }
+    }
 }
 
 void runGate(string gate, int activationChoice) {
@@ -67,11 +73,12 @@ void runGate(string gate, int activationChoice) {
     cout << "Initial Predictions" << endl;
     displayPredictions(perceptron, data);
 
-    waitForContinue();
+    char mode = getTrainingChoice();
 
     while (!trainer.isConverged(perceptron, data)) {
         epoch++;
 
+        cout << endl;
         cout << "Epoch " << epoch << endl;
         cout << "----------------" << endl;
 
@@ -96,11 +103,11 @@ void runGate(string gate, int activationChoice) {
             cout << "Final Predictions" << endl;
             displayPredictions(perceptron, data);
 
-            waitForContinue();
             break;
         }
 
-        waitForContinue();
+        if (mode == 'n')
+            mode = getTrainingChoice();
     }
 }
 
@@ -123,7 +130,7 @@ int main() {
                 break;
 
             if (choice != 1 && choice != 2)
-                throw InvalidChoiceException();
+                throw "Invalid choice! Please enter 1 or 2.";
 
             string gate;
 
@@ -132,20 +139,29 @@ int main() {
             else
                 gate = "OR";
 
-            cout << endl;
-            cout << "Select Activation Function" << endl;
-            cout << "1. Step Activation" << endl;
-            cout << "2. Sigmoid Activation" << endl;
-            cout << "Enter choice: ";
-            cin >> choice;
+            while (true) {
+                cout << endl;
+                cout << "Select Activation Function" << endl;
+                cout << "1. Step Activation" << endl;
+                cout << "2. Sigmoid Activation" << endl;
+                cout << "Enter choice: ";
+                cin >> choice;
 
-            if (choice != 1 && choice != 2)
-                throw InvalidChoiceException();
+                try {
+                    if (choice != 1 && choice != 2)
+                        throw "Invalid choice! Please enter 1 or 2.";
+
+                    break;
+                }
+                catch (const char* message) {
+                    cout << message << endl;
+                }
+            }
 
             runGate(gate, choice);
         }
-        catch (const InvalidChoiceException& e) {
-            cout << e.what() << endl;
+        catch (const char* message) {
+            cout << message << endl;
         }
     }
 }
