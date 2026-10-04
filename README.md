@@ -13,15 +13,19 @@ The perceptron starts with randomly initialized weights and bias, and learns by 
 ```text
 MiniPerceptron/
 │
-├── Activation.h
-├── Activation.cpp
-├── Dataset.h
-├── Dataset.cpp
-├── Perceptron.h
-├── Perceptron.cpp
-├── PerceptronTrainer.h
-├── PerceptronTrainer.cpp
-├── main.cpp
+├── include/
+│   ├── Activation.h
+│   ├── Dataset.h
+│   ├── Loss.h
+│   ├── Perceptron.h
+│   └── PerceptronTrainer.h
+├── src/
+│   ├── Activation.cpp
+│   ├── Dataset.cpp
+│   ├── Loss.cpp
+│   ├── Perceptron.cpp
+│   ├── PerceptronTrainer.cpp
+│   └── main.cpp
 ├── Makefile
 └── README.md
 ```
