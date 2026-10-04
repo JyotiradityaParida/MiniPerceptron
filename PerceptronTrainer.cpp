@@ -27,3 +27,23 @@ bool PerceptronTrainer::isConverged(Perceptron& perceptron, const Dataset& data)
 
     return true;
 }
+
+void PerceptronTrainer::trainEpoch(MultiLayerPerceptron& network, const Dataset& data, double learningRate) {
+    vector<vector<double>> input = data.getInputs();
+    vector<int> output = data.getOutputs();
+    int n = input.size();
+    for (int i=0; i < n; i++)
+        network.update(input[i], output[i], learningRate);
+}
+
+bool PerceptronTrainer::isConverged(MultiLayerPerceptron& network, const Dataset& data) {
+    vector<vector<double>> input = data.getInputs();
+    vector<int> output = data.getOutputs();
+    int n = input.size();
+    for (int i=0; i<n; i++) {
+        if (network.predict(input[i]) != output[i])
+            return false;
+    }
+
+    return true;
+}

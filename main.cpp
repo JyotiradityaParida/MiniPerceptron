@@ -5,18 +5,8 @@
 #include "Loss.h"
 #include "Perceptron.h"
 #include "PerceptronTrainer.h"
-#include "MultiLayerPerceptron.h"
 using namespace std;
 
-template <typename Network>
-void displayPredictions(Network& network, const Dataset& data) {
-    for (int i=0;i<data.getInputs().size();i++) {
-        cout << "[" << data.getInputs()[i][0] << ","
-             << data.getInputs()[i][1] << "] -> "
-             << network.predict(data.getInputs()[i])
-             << " (expected " << data.getOutputs()[i] << ")" << endl;
-    }
-}
 
 char getTrainingChoice() {
     char choice;
@@ -37,6 +27,16 @@ char getTrainingChoice() {
         catch (const char* message) {
             cout << message << endl;
         }
+    }
+}
+
+template <typename Network>
+void displayPredictions(Network& network, const Dataset& data) {
+    for (int i=0;i<data.getInputs().size();i++) {
+        cout << "[" << data.getInputs()[i][0] << ","
+             << data.getInputs()[i][1] << "] -> "
+             << network.predict(data.getInputs()[i])
+             << " (expected " << data.getOutputs()[i] << ")" << endl;
     }
 }
 
@@ -125,6 +125,7 @@ void runNetwork(Dataset& data, string title) {
 
     int hiddenSize = 3;
     MultiLayerPerceptron network(2, hiddenSize, new Sigmoid());
+    PerceptronTrainer trainer;
 
     double learningRate = 0.2;
     int epoch = 0;
@@ -146,14 +147,14 @@ void runNetwork(Dataset& data, string title) {
 
     char mode = getTrainingChoice();
 
-    while (!network.isConverged(data) && epoch < maxEpoch) {
+    while (!trainer.isConverged(network, data) && epoch < maxEpoch) {
         epoch++;
 
         cout << endl;
         cout << "Epoch " << epoch << endl;
         cout << "----------------" << endl;
 
-        network.trainEpoch(data, learningRate);
+        trainer.trainEpoch(network, data, learningRate);
 
         cout << "Weights and Bias" << endl;
         network.display();
@@ -168,7 +169,7 @@ void runNetwork(Dataset& data, string title) {
 
     cout << endl;
 
-    if (network.isConverged(data))
+    if (trainer.isConverged(network, data))
         cout << "MODEL CONVERGED!" << endl;
     else
         cout << "MAX EPOCHS REACHED (" << maxEpoch << ") WITHOUT CONVERGING" << endl;
