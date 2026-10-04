@@ -7,6 +7,7 @@
 class PerceptronTrainer {
 public:
     void trainEpoch(Perceptron& perceptron, const Dataset& data, double learningRate);
+    void trainEpoch(Perceptron& perceptron, const Dataset& data, double learningRate, Loss* loss);
     bool isConverged(Perceptron& perceptron, const Dataset& data);
 };
 

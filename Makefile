@@ -1,5 +1,5 @@
-MiniPerceptron: main.o Activation.o Dataset.o Perceptron.o PerceptronTrainer.o
-	g++ main.o Activation.o Dataset.o Perceptron.o PerceptronTrainer.o -o MiniPerceptron
+MiniPerceptron: main.o Activation.o Loss.o Dataset.o Perceptron.o PerceptronTrainer.o MultiLayerPerceptron.o
+	g++ main.o Activation.o Loss.o Dataset.o Perceptron.o PerceptronTrainer.o MultiLayerPerceptron.o -o MiniPerceptron
 
 main.o: main.cpp
 	g++ -c main.cpp
@@ -7,14 +7,20 @@ main.o: main.cpp
 Activation.o: Activation.cpp Activation.h
 	g++ -c Activation.cpp
 
+Loss.o: Loss.cpp Loss.h
+	g++ -c Loss.cpp
+
 Dataset.o: Dataset.cpp Dataset.h
 	g++ -c Dataset.cpp
 
-Perceptron.o: Perceptron.cpp Perceptron.h Activation.h
+Perceptron.o: Perceptron.cpp Perceptron.h Activation.h Loss.h
 	g++ -c Perceptron.cpp
 
-PerceptronTrainer.o: PerceptronTrainer.cpp PerceptronTrainer.h Perceptron.h Dataset.h
+PerceptronTrainer.o: PerceptronTrainer.cpp PerceptronTrainer.h Perceptron.h Dataset.h Loss.h
 	g++ -c PerceptronTrainer.cpp
+
+MultiLayerPerceptron.o: MultiLayerPerceptron.cpp MultiLayerPerceptron.h Activation.h Dataset.h
+	g++ -c MultiLayerPerceptron.cpp
 
 clean:
 	rm -f *.o MiniPerceptron

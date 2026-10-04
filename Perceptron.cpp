@@ -14,25 +14,32 @@ Perceptron::Perceptron(int inputSize, Activation* activation) {
 }
 
 int Perceptron::predict(const vector<double>& input) {
+    if (output(input) >= 0.5) return 1;
+    return 0;
+}
+
+double Perceptron::output(const vector<double>& input) {
     double sum = bias;
 
     for(int i=0; i<input.size(); i++)
         sum += weights[i] * input[i];
 
-    double output = act->activate(sum);
-
-    if (output >= 0.5) return 1;
-    return 0;
+    return act->activate(sum);
 }
 
-void Perceptron::update(const vector<double>& input, int target, double learningRate) {
-    int prediction = predict(input);
-    int error = target - prediction;
-
+void Perceptron::adjust(const vector<double>& input, double error, double learningRate) {
     for (int i=0;i<input.size();i++)
         weights[i] += learningRate * error * input[i];
 
     bias += learningRate * error;
+}
+
+void Perceptron::update(const vector<double>& input, int target, double learningRate) {
+    adjust(input, target - predict(input), learningRate);
+}
+
+void Perceptron::update(const vector<double>& input, int target, double learningRate, Loss* loss) {
+    adjust(input, loss->error(target, output(input)), learningRate);
 }
 
 void Perceptron::display() {

@@ -12,6 +12,7 @@ private:
 
 public:
     Dataset(string gate);
+    Dataset(vector<int> outputs);
 
     const vector<vector<double>>& getInputs() const;
     const vector<int>& getOutputs() const;

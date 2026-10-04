@@ -7,6 +7,13 @@ Dataset::Dataset(string gate) {
         outputs = {0,0,0,1};
     else if (gate == "OR")
         outputs = {0,1,1,1};
+    else if (gate == "XOR")
+        outputs = {0,1,1,0};
+}
+
+Dataset::Dataset(vector<int> outputs) {
+    inputs = {{0,0}, {0,1}, {1,0}, {1,1}};
+    this->outputs = outputs;
 }
 
 const vector<vector<double>>& Dataset::getInputs() const {
